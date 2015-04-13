@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center"
+        android:background="#88a8ec"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Book Vehicle"
+            android:textColor="#000"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Boarding Loaction"
+        android:textColor="#372c24" />
+
+    <EditText
+        android:id="@+id/boarding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Enter your Boarding Location"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Destination"
+        android:textColor="#372c24" />
+
+    <EditText
+        android:id="@+id/destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Destination" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:textColor="#372c24" />
+
+    <EditText
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Enter time for when you require"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Number of Taxis"
+        android:textColor="#372c24" />
+
+    <EditText
+        android:id="@+id/no_of_taxis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="No of vehicles"
+        android:inputType="number"
+        android:singleLine="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Type Of Vehicle"
+        android:textColor="#372c24" />
+    <EditText
+        android:id="@+id/vehicle_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Type of Vehicle"
+        android:singleLine="true" />
+    <Button
+        android:id="@+id/CustomDialogBookVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Book Vehicle" />
+</LinearLayout><!-- From: file:/E:/AutoRiksha1/app/src/main/res/layout/dialogxml.xml -->

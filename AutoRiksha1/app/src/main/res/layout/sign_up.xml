@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/email_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Email"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/setpassword_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Password" />
+
+    <EditText
+        android:id="@+id/setreenterpassword_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Re-enter Password" />
+
+    <EditText
+        android:id="@+id/fullname_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Full Name"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/mobno_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="Enter 10 digit mobile number"
+        android:inputType="number"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/registersignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Click To Search" />
+
+</LinearLayout>

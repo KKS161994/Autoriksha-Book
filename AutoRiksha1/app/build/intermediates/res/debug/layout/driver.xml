@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available"
+        android:id="@+id/driverAvailable"
+        android:layout_gravity="center_vertical" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not Available"
+        android:id="@+id/driverNotAvailable"
+        android:layout_gravity="center_vertical" />
+</LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booked"
+            android:id="@+id/driverBooked"
+            android:layout_gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="See Your Book Status"
+        android:id="@+id/driverCheckStatus"
+        android:layout_gravity="bottom" />
+</FrameLayout><!-- From: file:/E:/AutoRiksha1/app/src/main/res/layout/driver.xml -->
