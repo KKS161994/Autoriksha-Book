@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,7 +17,7 @@ import in.silive.Service.LocationUpdateService;
 /**
  * Created by kartikey on 4/3/15.
  */
-public class Driver_Class extends Activity implements View.OnClickListener {
+public class Driver_Class extends ActionBarActivity implements View.OnClickListener {
     Button available, notavailable, booked, checkstatus;
     Intent intent;
     @Override
@@ -53,7 +56,12 @@ public class Driver_Class extends Activity implements View.OnClickListener {
         startService(new Intent(this,LocationUpdateService.class));
         super.onCreate(savedInstanceState);
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
     @Override
     public void onBackPressed() {
     showLogoutBox();

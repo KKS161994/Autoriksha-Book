@@ -1,5 +1,4 @@
 package in.silive.autorikshawautomation;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,18 +9,22 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.util.regex.Pattern;
+import com.fourmob.panningview.library.PanningView;
 
+import java.util.regex.Pattern;
 public class SignupAndLogin extends Activity {
     Button login_btn, signup_btn;
     Intent i;
     EditText email, password;
-
+    PanningView panningView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginandsplash);
+        panningView= (PanningView) findViewById(R.id.panningView);
+        panningView.startPanning();
+
         email = (EditText) findViewById(R.id.login_name);
         password = (EditText) findViewById(R.id.loginpassword);
         login_btn = (Button) findViewById(R.id.login);

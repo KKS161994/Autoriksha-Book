@@ -125,6 +125,12 @@ public class MainActivity extends ActionBarActivity {
 
     private void itemSelected(int pos) throws InterruptedException {
         switch (pos) {
+
+            case -1:
+                frag = null;
+                Toast.makeText(this, "Fuck Off", Toast.LENGTH_SHORT).show();
+                break;
+
             case 0:
                 frag = new MapFragment();
                 tag = "Home";

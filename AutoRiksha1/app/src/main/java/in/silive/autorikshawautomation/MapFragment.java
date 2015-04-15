@@ -1,4 +1,5 @@
 package in.silive.autorikshawautomation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +48,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
@@ -56,6 +58,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 public class MapFragment extends Fragment implements OnClickListener {
     private GoogleMap map;
     private LatLng loc;
@@ -74,10 +77,12 @@ public class MapFragment extends Fragment implements OnClickListener {
     String urlforjson = "https://maps.googleapis.com/maps/api/place/search/json?location=-33.8670522,151.1957362&radius=500&types=food&sensor=true&key=AIzaSyBxe8bMBX93Rnwdu3ICB97yufeAVBmD1pQ", data = "";
     SupportMapFragment fragment;
     android.support.v4.app.FragmentTransaction fragTransaction;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,10 +97,10 @@ public class MapFragment extends Fragment implements OnClickListener {
         rideLater.setOnClickListener(this);
         searchboarding = (Button) rootView.findViewById(R.id.searcbhoardinglocation);
         searchdestination = (Button) rootView.findViewById(R.id.searchdestinationlocation);
-        try{searchboarding.setOnClickListener(this);
-        searchdestination.setOnClickListener(this);
-    }
-        catch(Exception e){
+        try {
+            searchboarding.setOnClickListener(this);
+            searchdestination.setOnClickListener(this);
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
@@ -110,6 +115,7 @@ public class MapFragment extends Fragment implements OnClickListener {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if ((((destination.getText().toString()).length()) >= 2)) {
@@ -132,6 +138,7 @@ public class MapFragment extends Fragment implements OnClickListener {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
@@ -146,12 +153,14 @@ public class MapFragment extends Fragment implements OnClickListener {
                     fetch = null;
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
         return rootView;
     }
+
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -159,57 +168,81 @@ public class MapFragment extends Fragment implements OnClickListener {
         // LatLng llboard=null,lldestination=null;
         switch (v.getId()) {
             case R.id.mapfragment_rideLater:
-                CustomDialogClass cdc=new CustomDialogClass(getActivity(),boarding.getText().toString(),destination.getText().toString());
-                cdc.show();
-                break;
-            case R.id.searcbhoardinglocation:
-                try {
-String boardingString=modifyString(boarding.getText().toString());
-                    boarding.setText(boardingString);
-                    llboard = new GetLatLng(boardingString, getActivity()).getLatLng();
+                if (llboard == null || lldestination == null) {
+                    if (llboard == null && lldestination == null) {
+                        Toast.makeText(getActivity(), "Boarding and Destination Empty", Toast.LENGTH_SHORT).show();
+                        boarding.setError("Boarding Location id empty");
+                        destination.setError("Boarding Location Empty");
+                    } else if (llboard == null) {
+                        boarding.setError("Boarding Location id empty");
+                        Toast.makeText(getActivity(), "Boarding Empty", Toast.LENGTH_SHORT).show();
 
-                    if(llboard!=null){
-                    map.addMarker(new MarkerOptions().position(llboard).title("Boarding Location"));
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(llboard, 15));
-                    if (llboard != null && lldestination != null)
-                        drawRoute(llboard, lldestination);
+                    }else {
+                        destination.setError("Boarding Location Empty");
+                        Toast.makeText(getActivity(), "Destination Empty", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else
-                        Toast.makeText(getActivity(),"Location Not Present\nPlease Recheck",Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //   Toast.makeText(getActivity(), "No results from geocoding ", Toast.LENGTH_SHORT).show();
+else {
+                    CustomDialogClass cdc = new CustomDialogClass(getActivity(), boarding.getText().toString(), destination.getText().toString());
+                    //cdc.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    cdc.setTitle("Book Vehicle");
+                    cdc.show();
+                }           break;
+            case R.id.searcbhoardinglocation:
+                if (!((boarding.getText().toString()).equals(""))) {
+                    try {
+                        String boardingString = modifyString(boarding.getText().toString());
+                        boarding.setText(boardingString);
+                        llboard = new GetLatLng(boardingString, getActivity()).getLatLng();
+
+                        if (llboard != null) {
+                            map.addMarker(new MarkerOptions().position(llboard).title("Boarding Location"));
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(llboard, 15));
+                            if (llboard != null && lldestination != null)
+                                drawRoute(llboard, lldestination);
+                        } else
+                            Toast.makeText(getActivity(), "Location Not Present\nPlease Recheck", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        //   Toast.makeText(getActivity(), "No results from geocoding ", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    boarding.setError("Boarding Location Empty");
                 }
                 break;
             case R.id.searchdestinationlocation:
-                try {
-                    String destinationString=modifyString(destination.getText().toString());
-                    destination.setText(destinationString);
-                    lldestination = new GetLatLng(destinationString, getActivity()).getLatLng();
-                    if(lldestination!=null) {
-                        map.addMarker(new MarkerOptions().position(lldestination).title("Destination"));
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(lldestination, 15));
-                        if ((llboard != null) && (lldestination != null))
-                            drawRoute(llboard, lldestination);
+                if (!((destination.getText().toString()).equals(""))) {
+                    try {
+                        String destinationString = modifyString(destination.getText().toString());
+                        destination.setText(destinationString);
+                        lldestination = new GetLatLng(destinationString, getActivity()).getLatLng();
+                        if (lldestination != null) {
+                            map.addMarker(new MarkerOptions().position(lldestination).title("Destination"));
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lldestination, 15));
+                            if ((llboard != null) && (lldestination != null))
+                                drawRoute(llboard, lldestination);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        //  Toast.makeText(getActivity(), "No results from geocoding ", Toast.LENGTH_SHORT).show();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //  Toast.makeText(getActivity(), "No results from geocoding ", Toast.LENGTH_SHORT).show();
+                } else {
+                    destination.setError("Boarding Location Empty");
                 }
                 break;
         }
     }
-public String modifyString(String mString){
-   // Toast.makeText(getActivity(),"Old String is"+mString.substring(13),Toast.LENGTH_SHORT).show();
-    if(mString.charAt(0)=='{')
-    {
-        int len=mString.length();
-        mString=mString.substring(13,len-1);
-        return mString;
+
+    public String modifyString(String mString) {
+        // Toast.makeText(getActivity(),"Old String is"+mString.substring(13),Toast.LENGTH_SHORT).show();
+        if (mString.charAt(0) == '{') {
+            int len = mString.length();
+            mString = mString.substring(13, len - 1);
+            return mString;
+        } else
+            return mString;
     }
-    else
-        return mString;
-}
+
     public void drawRoute(LatLng llb, LatLng lld) {
         new DrawPath().execute();
     }
