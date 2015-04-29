@@ -25,7 +25,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Booked"
+            android:text="Completed Booking"
             android:id="@+id/driverBooked"
             android:layout_gravity="center_vertical|center_horizontal" />
     </LinearLayout>

@@ -13,20 +13,33 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import in.silive.Config;
 import in.silive.Service.LocationUpdateService;
+import in.silive.listener.NetworkResponseListener;
+import in.silive.network.DownloadDATApost;
 /**
  * Created by kartikey on 4/3/15.
  */
-public class Driver_Class extends ActionBarActivity implements View.OnClickListener {
+public class Driver_Class extends Activity implements NetworkResponseListener,View.OnClickListener {
     Button available, notavailable, booked, checkstatus;
+    String text;
     Intent intent;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.driver);
         //Initialise Buttons variable
+        intent=new Intent(new Intent(getBaseContext(),LocationUpdateService.class));
         available = (Button) findViewById(R.id.driverAvailable);
         notavailable = (Button) findViewById(R.id.driverNotAvailable);
         booked = (Button) findViewById(R.id.driverBooked);
+        DownloadDATApost.setNRL(this);
         available.setOnClickListener(this);
         notavailable.setOnClickListener(this);
         booked.setOnClickListener(this);
@@ -34,34 +47,29 @@ public class Driver_Class extends ActionBarActivity implements View.OnClickListe
         checkstatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        stopService(new Intent(getBaseContext(),LocationUpdateService.class));
+                        stopService(intent);
                         Intent i = new Intent(Driver_Class.this,
                                 DriverStatus.class);
                         startActivity(i);
-                        overridePendingTransition(android.R.anim.fade_in,
-                                android.R.anim.fade_out);
                         finish();
-                    }
-                }, 1000);
             }
         });
        //intent = new Intent(Driver_Class.this,LocationUpdateService.class);
         //startActivity(intent);
   //startService(new Intent(Driver_Class.this,LocationUpdateService.class));
         Toast.makeText(this,"Service started",Toast.LENGTH_SHORT);
-        startService(new Intent(this,LocationUpdateService.class));
+   //To be started
+      //startService(new Intent(this,LocationUpdateService.class));
         super.onCreate(savedInstanceState);
     }
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+*/
     @Override
     public void onBackPressed() {
     showLogoutBox();
@@ -83,7 +91,7 @@ public class Driver_Class extends ActionBarActivity implements View.OnClickListe
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                stopService(new Intent(getBaseContext(),LocationUpdateService.class));
+                                stopService(intent);
                                 Intent i = new Intent(Driver_Class.this, SignupAndLogin.class);
                                 startActivity(i);
 
@@ -103,22 +111,85 @@ public class Driver_Class extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String text;
+        JSONObject jsonObject;
         //Setting text variable to a keyword so that it can be appended with url to change driver status on api
         switch (v.getId()) {
             case R.id.driverNotAvailable:
-                stopService(new Intent(getBaseContext(),LocationUpdateService.class));
-                Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT);
-                text = "not%20available";
+                text = "notavailable";
+                Toast.makeText(this,"Service stopping",Toast.LENGTH_SHORT);
+
+                try {
+                    DownloadDATApost.setUrl(new URL(Config.driverchangeavailabilityAPI));
+                    jsonObject=new JSONObject();
+                    jsonObject.put("Status","false");
+                    jsonObject.put("Id","2");
+                DownloadDATApost.setJSON(jsonObject);
+                    new DownloadDATApost().execute();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
             case R.id.driverAvailable:
-                startService(new Intent(this,LocationUpdateService.class));
-                Toast.makeText(Driver_Class.this,"Service Started",Toast.LENGTH_SHORT).show();
                 text = "available";
+                try {
+                    DownloadDATApost.setUrl(new URL(Config.driverchangeavailabilityAPI));
+                    jsonObject=new JSONObject();
+                    jsonObject.put("Status","true");
+                    jsonObject.put("Id","2");
+                    DownloadDATApost.setJSON(jsonObject);
+                    new DownloadDATApost().execute();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.driverBooked:
-                text = "booked";
+                text = "notbooked";
+                try {
+                    DownloadDATApost.setUrl(new URL(Config.driverchangebookstatusAPI));
+                    jsonObject=new JSONObject();
+                    jsonObject.put("Status","false");
+                    jsonObject.put("Id","2");
+                    DownloadDATApost.setJSON(jsonObject);
+                    new DownloadDATApost().execute();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
+
+    @Override
+    public void onPreExecute() {
+progressDialog=ProgressDialog.show(this,"Sending","Loading");
+    }
+    @Override
+    public void onPostExecute(String data) throws JSONException {
+        progressDialog.dismiss();
+        if(DownloadDATApost.getResultCode()==404||DownloadDATApost.getResultCode()==200){
+    Toast.makeText(this,"Sent your "+text+"status",Toast.LENGTH_SHORT).show();
+
+    if(text.equals("available"))
+    {
+        startService(intent);
+        Toast.makeText(this,"Service Started",Toast.LENGTH_SHORT).show();
+    }
+    else if(text.equals("notavailable"))
+    {
+        stopService(intent);
+        Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT);
+    }
+    else
+        startService(intent);
+}
+}
 }

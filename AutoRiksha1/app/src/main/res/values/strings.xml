@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="google_play_services_version">7095000</integer>
-    <string name="app_name">AutoRiksha</string>
+    <string name="app_name">TaxiBooking</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string-array name="listItems">

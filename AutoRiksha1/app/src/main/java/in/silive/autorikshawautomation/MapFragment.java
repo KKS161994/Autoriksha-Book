@@ -1,5 +1,4 @@
 package in.silive.autorikshawautomation;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,21 +10,17 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import in.silive.CustomClasses.CustomDialogClass;
 import in.silive.JSONParser.*;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
-
 import in.silive.listener.NetworkResponseListener;
 import in.silive.model.GoogleMapV2Direction;
 import in.silive.network.DownloadURL;
 import in.silive.network.GPSTracker;
 import in.silive.network.KeyValues;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -183,7 +178,7 @@ public class MapFragment extends Fragment implements OnClickListener {
                     }
                 }
 else {
-                    CustomDialogClass cdc = new CustomDialogClass(getActivity(), boarding.getText().toString(), destination.getText().toString());
+                    CustomDialogClass cdc = new CustomDialogClass(getActivity(), boarding.getText().toString(), destination.getText().toString(),llboard,lldestination);
                     //cdc.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     cdc.setTitle("Book Vehicle");
                     cdc.show();
@@ -296,12 +291,13 @@ else {
         lat = gps.getLatitude();
         lng = gps.getLongitude();
         loc = new LatLng(lat, lng);
+
         map.clear();
         map.addMarker(new MarkerOptions().position(loc).title("Present Location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
         map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         map.setMyLocationEnabled(true);
-        if (map != null) {
+        if (map!= null) {
             map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location arg0) {
@@ -323,7 +319,6 @@ else {
             });
         }
     }
-
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:id="@+id/map_frameLayout"
     android:layout_height="match_parent"
@@ -83,17 +84,20 @@
             android:orientation="horizontal" >
 
             <Button
+                android:id="@+id/mapfragment_rideLater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#05d200"
+
+                android:text="Ride Now" />
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ride Now"
+                android:text="Ride Later"
                 android:id="@+id/mapfragment_rideNow"
                 />
 
-            <Button
-                android:id="@+id/mapfragment_rideLater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ride Later" />
         </LinearLayout>
     </FrameLayout>
 </FrameLayout><!-- From: file:/E:/AutoRiksha1/app/src/main/res/layout/activity_map.xml -->

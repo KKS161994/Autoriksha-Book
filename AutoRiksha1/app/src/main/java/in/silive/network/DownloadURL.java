@@ -1,10 +1,10 @@
 package in.silive.network;
-
 /**
  * Created by kartikey on 4/7/15.
  */
-
 import android.os.AsyncTask;
+
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import in.silive.listener.NetworkResponseListener;
-
 /**
  * Created by kartikey on 4/4/15.
  */
@@ -30,7 +29,6 @@ public static NetworkResponseListener nrl=null;
     public static void setNetworkResponseListener(NetworkResponseListener mListener){
         nrl=mListener;
     }
-
     @Override
     protected String doInBackground(String... params) {
         URL httpurl=null;
@@ -51,10 +49,13 @@ public static NetworkResponseListener nrl=null;
         }
         return null;
     }
-
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-    nrl.onPostExecute(sb.toString());
+        try {
+            nrl.onPostExecute(sb.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

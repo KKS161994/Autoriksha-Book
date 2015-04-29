@@ -1,14 +1,21 @@
 package in.silive.autorikshawautomation;
 
+import in.silive.Config;
 import in.silive.CustomClasses.CustomDialogClass;
 import in.silive.adapter.NavDrawerAdapter;
+import in.silive.listener.NetworkResponseListener;
 import in.silive.model.NavDrawerItem;
 import in.silive.network.ConnectivityCheck;
+import in.silive.network.DownloadDATApost;
 import in.silive.network.KeyValues;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -18,7 +25,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,7 +48,10 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class MainActivity extends ActionBarActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class MainActivity extends ActionBarActivity implements NetworkResponseListener {
     private ActionBar mActionBar;
     private TypedArray mDrawerIcons;
     private DrawerLayout mDrawerLayout;
@@ -50,12 +62,15 @@ public class MainActivity extends ActionBarActivity {
     private FragmentTransaction ft;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private Resources mResources;
+    ProgressDialog progressDialog;
     private final static String TAG_EVENTS = "event tag";
     private String tag;
     private Fragment frag;
     private ProgressBar pBar;
+    JSONObject jObject;
     private String previousTag, previousTitle;
     private boolean isDrawerOpen = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +99,10 @@ public class MainActivity extends ActionBarActivity {
                     itemSelected(position);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -123,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
                 .addToBackStack(null).commit();
     }
 
-    private void itemSelected(int pos) throws InterruptedException {
+    private void itemSelected(int pos) throws InterruptedException, MalformedURLException, JSONException {
         switch (pos) {
 
             case -1:
@@ -137,9 +156,27 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case 1:
                 frag = null;
-                CustomDialogClass cdc = new CustomDialogClass(this, "", "");
+                CustomDialogClass cdc = new CustomDialogClass(this, "", "", null, null);
+                cdc.setTitle("Book Vehicle");
                 cdc.show();
+                break;
+            case 2:
+                frag = new BookStatusFragment();
+                tag = "Know Status";
+                break;
+            case 3:
+                frag = null;
+                DownloadDATApost.setNRL(this);
+                LatLng pLocation = presentLocation();
 
+                JSONObject jsonOject = new JSONObject();
+                jsonOject.put("DangerLocationLatitude", pLocation.latitude + "");
+                jsonOject.put("DangerLocationLongitude", pLocation.longitude + "");
+                jsonOject.put("CustomerId", "!");
+                jsonOject.put("TransportId", "13");
+                DownloadDATApost.setJSON(jsonOject);
+                DownloadDATApost.setUrl(new URL(Config.createdangerAPI));
+                new DownloadDATApost().execute();
                 break;
             case 6:
                 frag = null;
@@ -185,11 +222,7 @@ public class MainActivity extends ActionBarActivity {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 ProgressDialog pDialog = ProgressDialog.show(MainActivity.this, "LogOut", "Logging Out");
-                                try {
-                                    Thread.sleep(3000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+
                                 Intent i = new Intent(MainActivity.this, SignupAndLogin.class);
                                 startActivity(i);
 
@@ -205,6 +238,24 @@ public class MainActivity extends ActionBarActivity {
                 }).setTitle("Logout");
         AlertDialog alert = builder.create();
         alert.show();
+    }
+    public LatLng presentLocation() {
+boolean isGPSEnabled=false,isNetworkEnabled=false;
+        LocationManager lManager = null;
+        //Location location;
+        isGPSEnabled = lManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = lManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        lManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        /*if(isGPSEnabled)
+        location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        else
+        location=lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        */LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = service.getBestProvider(criteria, false);
+        Location location = service.getLastKnownLocation(provider);
+        LatLng presentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        return presentLocation;
     }
 
     public void showBox(final String error) {
@@ -258,11 +309,30 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawers();
         else {
             //	addtoB
-            if (fm.getBackStackEntryCount() == 1)
-                showLogoutBox();
-            else
-                fm.popBackStack();
-
+            try {
+                if (fm.getBackStackEntryCount() == 1)
+                    showLogoutBox();
+                else
+                    itemSelected(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+    }
+    @Override
+    public void onPreExecute() {
+progressDialog=ProgressDialog.show(MainActivity.this,"Danger","Sending request");
+    }
+    @Override
+    public void onPostExecute(String data) throws JSONException {
+        progressDialog.dismiss();
+if(DownloadDATApost.getResultCode()== HttpURLConnection.HTTP_OK)
+    Toast.makeText(MainActivity.this,"Your result has been successfully sent",Toast.LENGTH_SHORT).show();
+ else
+    Toast.makeText(MainActivity.this,"Some Problem in sending results please try again later",Toast.LENGTH_SHORT).show();
     }
 }

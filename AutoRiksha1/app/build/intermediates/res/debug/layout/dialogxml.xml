@@ -5,25 +5,6 @@
     android:layout_margin="5dp"
     android:background="@drawable/layout"
     android:orientation="vertical">
-    <!--
-
-    <LinearLayout
-        android:layout_marginTop="-6dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#88a8ec"
->
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Book Vehicle"
-            android:textColor="#000"
-            android:gravity="center"
-            android:textSize="30dp"
-     />
-    </LinearLayout>
--->
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
@@ -43,11 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dip"
         android:hint="Enter your Boarding Location"
-        android:singleLine="true" />
+         />
 
     <TextView
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
         android:text="Destination"
@@ -69,6 +49,7 @@
         android:textColor="#372c24" />
 
     <EditText
+        android:text="1"
         android:id="@+id/no_of_taxis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,22 +57,6 @@
         android:layout_marginTop="5dip"
         android:hint="No of vehicles"
         android:inputType="number"
-        android:singleLine="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:text="Type Of Vehicle"
-        android:textColor="#372c24" />
-
-    <EditText
-        android:id="@+id/vehicle_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:hint="Type of Vehicle"
         android:singleLine="true" />
 
     <Button

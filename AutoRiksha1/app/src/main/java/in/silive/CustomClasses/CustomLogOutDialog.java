@@ -23,7 +23,6 @@ public class CustomLogOutDialog extends Dialog implements View.OnClickListener{
         super(context);
   this.mContext=context;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +39,7 @@ switch (v.getId())
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-  //      Intent i = new Intent(mContext, SignupAndLogin.class);
-//        startActivity(i);
-
-        pDialog.dismiss();
+     pDialog.dismiss();
         dismiss();
 break;
     case R.id.logoutdialog_Cancel:
